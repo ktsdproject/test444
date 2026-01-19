@@ -3,267 +3,255 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ตรวจสอบสิทธิเลือกตั้ง | ระบบค้นหาหน่วยเลือกตั้ง</title>
+    <title>ระบบตรวจสอบสิทธิเลือกตั้ง</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;600;700&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    
     <style>
         body { font-family: 'Sarabun', sans-serif; }
         .bg-gradient { background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%); }
+        .digit-box { @apply w-12 h-14 border-2 border-blue-600 rounded-lg flex items-center justify-center text-3xl font-black text-blue-800 bg-white shadow-sm; }
+        
+        /* สไตล์วงกลมจับเวลา */
+        .timer-svg { transform: rotate(-90deg); }
+        .timer-bg { fill: none; stroke: #f3f4f6; stroke-width: 6; }
+        .timer-progress { 
+            fill: none; 
+            stroke: #10b981; 
+            stroke-width: 6; 
+            stroke-linecap: round; 
+            stroke-dasharray: 314; 
+            stroke-dashoffset: 314; 
+            transition: stroke-dashoffset 3s linear; 
+        }
+
+        /* Animation ปุ่มเครื่องหมายถูกเด้งขึ้นมา */
+        @keyframes pop-in {
+            0% { transform: scale(0); opacity: 0; }
+            80% { transform: scale(1.2); opacity: 1; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+        .animate-pop { animation: pop-in 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; }
+        
         .loader { border-top-color: #3498db; animation: spinner 1.5s linear infinite; }
         @keyframes spinner { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-        /* Animation สำหรับ Modal */
-        .fade-in { animation: fadeIn 0.3s ease-out; }
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
     </style>
 </head>
-<body class="bg-gray-50 min-h-screen flex flex-col">
+<body class="bg-gray-100 min-h-screen">
 
-    <div class="bg-gradient text-white pb-24 pt-10 px-4 text-center shadow-lg relative z-0">
-        <h1 class="text-3xl font-bold mb-2 drop-shadow-md">ระบบตรวจสอบสิทธิเลือกตั้ง</h1>
-        <p class="text-blue-100 opacity-90 font-light">เขตที่ 4 บริเวณสำนักงานเขตคลองเตย แขวงคลองเตย</p>
+    <div class="bg-gradient text-white pb-24 pt-10 px-4 text-center shadow-lg">
+        <h1 class="text-3xl font-bold mb-2">ตรวจสอบสิทธิเลือกตั้ง</h1>
+        <p class="text-blue-100 opacity-90">กรอกเลขบัตรเพื่อตรวจสอบหน่วยและเอกสาร</p>
     </div>
 
-    <div class="max-w-md mx-auto -mt-16 px-4 w-full relative z-10 flex-grow">
-        
-        <div class="bg-white rounded-2xl shadow-xl p-6 mb-6 border border-gray-100">
-            <label for="id-card" class="block text-gray-700 font-semibold mb-3 text-lg">
-                เลขบัตรประจำตัวประชาชน
-            </label>
-            <div class="space-y-5">
-                <div class="relative">
-                    <input 
-                        type="tel" 
-                        id="id-card" 
-                        maxlength="17"
-                        inputmode="numeric"
-                        placeholder="x-xxxx-xxxxx-xx-x"
-                        class="w-full text-2xl tracking-widest text-center border-2 border-gray-200 rounded-xl py-4 text-gray-700 placeholder-gray-300 focus:border-blue-500 focus:ring-4 focus:ring-blue-100 focus:outline-none transition-all"
-                    >
-                    <div class="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-400">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V8a2 2 0 00-2-2h-5m-4 0V5a2 2 0 114 0v1m-4 0a2 2 0 104 0m-5 8a2 2 0 100-4 2 2 0 000 4zm0 0c1.306 0 2.417.835 2.83 2M9 14a3.001 3.001 0 00-2.83 2M15 11h3m-3 4h2" />
-                        </svg>
+    <div class="max-w-md mx-auto -mt-16 px-4 pb-12">
+        <div class="bg-white rounded-2xl shadow-xl p-6 mb-6">
+            <label class="block text-gray-700 font-semibold mb-3 text-center">เลขบัตรประจำตัวประชาชน</label>
+            <input type="tel" id="id-card" maxlength="17" placeholder="x-xxxx-xxxxx-xx-x" 
+                   class="w-full text-2xl tracking-widest text-center border-2 border-gray-200 rounded-xl py-4 focus:border-blue-500 focus:outline-none transition-all">
+            <button onclick="searchVoter()" id="search-btn" class="w-full mt-4 bg-blue-600 hover:bg-blue-700 text-white font-bold py-4 rounded-xl shadow-lg flex justify-center items-center text-lg active:scale-95 transition-all">
+                <span id="btn-text">ตรวจสอบข้อมูล</span>
+                <div id="btn-loader" class="hidden loader w-5 h-5 border-2 border-white border-t-transparent rounded-full ml-2"></div>
+            </button>
+        </div>
+
+        <div id="result-card" class="hidden bg-white rounded-3xl shadow-2xl overflow-hidden border-t-[10px] border-blue-500">
+            <div class="p-8 space-y-8">
+                <div class="text-center">
+                    <p class="text-xs text-gray-400 font-bold uppercase tracking-widest mb-1">ชื่อผู้มีสิทธิ</p>
+                    <h2 id="res-name" class="text-3xl font-black text-gray-800">---</h2>
+                </div>
+
+                <div class="grid grid-cols-2 gap-4">
+                    <div class="bg-blue-50 p-4 rounded-2xl border border-blue-100 text-center">
+                        <p class="text-xs text-blue-500 font-bold uppercase mb-1">ชุดที่</p>
+                        <p id="res-batch" class="text-3xl font-black text-blue-800">--</p>
+                    </div>
+                    <div class="bg-orange-50 p-4 rounded-2xl border border-orange-100 text-center">
+                        <p class="text-xs text-orange-500 font-bold uppercase mb-1">ลำดับที่</p>
+                        <p id="res-seq" class="text-3xl font-black text-orange-800">----</p>
                     </div>
                 </div>
 
-                <button 
-                    onclick="searchVoter()" 
-                    id="search-btn"
-                    class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-4 rounded-xl shadow-lg transform active:scale-95 transition-all flex justify-center items-center text-lg"
-                >
-                    <span id="btn-text">ตรวจสอบข้อมูล</span>
-                    <div id="btn-loader" class="hidden loader w-5 h-5 border-2 border-white border-t-transparent rounded-full ml-2"></div>
+                <div class="bg-gray-50 p-5 rounded-2xl border border-gray-200 text-center leading-relaxed">
+                    <p class="text-xs text-gray-400 font-bold uppercase mb-2">ข้อมูลพื้นที่เลือกตั้ง</p>
+                    <p class="text-lg text-gray-700">
+                        เขตเลือกตั้งที่ <span id="res-const" class="font-black text-gray-900 text-xl">--</span><br>
+                        จังหวัด <span id="res-prov" class="font-black text-gray-900 text-xl">----------</span>
+                    </p>
+                </div>
+
+                <div>
+                    <p class="text-xs text-center text-gray-400 font-bold uppercase mb-3 tracking-widest">รหัสเขตเลือกตั้ง (4 ตัว)</p>
+                    <div id="res-code-container" class="flex justify-center gap-3">
+                        <div class="digit-box">-</div><div class="digit-box">-</div><div class="digit-box">-</div><div class="digit-box">-</div>
+                    </div>
+                </div>
+
+                <hr class="border-dashed border-gray-300">
+
+                <div class="space-y-4">
+                    <button onclick="handlePdfFlow('candidate')" class="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-5 rounded-2xl shadow-lg transition-all flex justify-center items-center gap-2">
+                        <span>🟢 รายชื่อผู้สมัคร สส. แบบแบ่งเขต</span>
+                    </button>
+                    
+                    <button onclick="handlePdfFlow('party')" class="w-full bg-pink-500 hover:bg-pink-600 text-white font-bold py-5 rounded-2xl shadow-lg transition-all flex justify-center items-center gap-2">
+                        <span>💗 รายชื่อพรรคการเมือง</span>
+                    </button>
+                    
+                    <div class="grid grid-cols-2 gap-4">
+                        <button onclick="handlePdfFlow('member')" class="bg-white border-2 border-gray-200 text-gray-700 hover:bg-gray-50 font-bold py-4 rounded-2xl shadow-sm text-sm flex flex-col items-center justify-center gap-1">
+                            <span class="text-lg">⚪</span><span>บัญชีรายชื่อ สส.</span>
+                        </button>
+                        <button onclick="handlePdfFlow('pm')" class="bg-white border-2 border-gray-200 text-gray-700 hover:bg-gray-50 font-bold py-4 rounded-2xl shadow-sm text-sm flex flex-col items-center justify-center gap-1">
+                            <span class="text-lg">👔</span><span>แคนดิเดตนายกฯ</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="inter-popup" class="hidden fixed inset-0 z-[60] bg-white flex flex-col items-center justify-center p-10 text-center">
+        <div class="max-w-xs w-full flex flex-col items-center">
+            <img id="inter-img" src="" class="w-40 h-40 mb-6 object-contain">
+            <h3 id="inter-title" class="text-2xl font-bold text-gray-800 mb-2">กำลังเตรียมไฟล์...</h3>
+            
+            <div class="relative w-32 h-32 flex items-center justify-center mt-6">
+                <div id="timer-container" class="absolute inset-0">
+                    <svg class="timer-svg w-full h-full">
+                        <circle class="timer-bg" cx="64" cy="64" r="50"></circle>
+                        <circle id="timer-bar" class="timer-progress" cx="64" cy="64" r="50"></circle>
+                    </svg>
+                    <div id="timer-text" class="absolute inset-0 flex items-center justify-center text-4xl font-black text-gray-800">3</div>
+                </div>
+
+                <button id="inter-close-btn" onclick="showLoadedPdf()" class="hidden w-24 h-24 bg-emerald-500 text-white rounded-full shadow-2xl flex items-center justify-center text-5xl font-bold hover:bg-emerald-600 transition-all z-10">
+                    ✓
                 </button>
             </div>
-        </div>
-
-        <div id="result-card" class="hidden transform transition-all duration-300 origin-top">
-            <div class="bg-white rounded-2xl shadow-xl overflow-hidden border-t-4 border-green-500">
-                <div class="p-6">
-                    <div class="flex justify-between items-start mb-4">
-                        <span class="bg-green-100 text-green-700 text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wide">
-                            ✓ พบข้อมูลผู้มีสิทธิ
-                        </span>
-                        <button onclick="resetSearch()" class="text-gray-400 hover:text-red-500 transition-colors">ปิด ✕</button>
-                    </div>
-                    
-                    <h2 id="res-name" class="text-2xl font-bold text-gray-800 mb-6 border-b pb-4 text-center">---</h2>
-                    
-                    <div class="grid grid-cols-2 gap-4 mb-6">
-                        <div class="bg-blue-50 p-4 rounded-xl text-center border border-blue-100">
-                            <p class="text-xs text-blue-600 mb-1 font-semibold uppercase">หน่วยเลือกตั้งที่</p>
-                            <p id="res-unit" class="text-4xl font-black text-blue-700">--</p>
-                        </div>
-                        <div class="bg-orange-50 p-4 rounded-xl text-center border border-orange-100">
-                            <p class="text-xs text-orange-600 mb-1 font-semibold uppercase">ลำดับในบัญชี</p>
-                            <p id="res-seq" class="text-4xl font-black text-orange-700">--</p>
-                        </div>
-                    </div>
-
-                    <div class="space-y-4 mb-6">
-                        <div class="flex items-start bg-gray-50 p-3 rounded-lg">
-                            <div class="bg-white p-2 rounded-full shadow-sm mr-3 text-red-500">
-                                📍
-                            </div>
-                            <div>
-                                <p class="text-xs text-gray-400 font-bold uppercase">ข้อมูล/สถานที่</p>
-                                <p id="res-location" class="text-gray-700 font-semibold leading-snug text-lg">---</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <button id="res-link" class="hidden w-full bg-gradient-to-r from-red-500 to-pink-600 hover:from-red-600 hover:to-pink-700 text-white text-center font-bold py-4 rounded-xl transition-all shadow-md transform hover:-translate-y-1 flex justify-center items-center gap-2">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                            <path fill-rule="evenodd" d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4zm2 6a1 1 0 011-1h6a1 1 0 110 2H7a1 1 0 01-1-1zm1 3a1 1 0 100 2h6a1 1 0 100-2H7z" clip-rule="evenodd" />
-                        </svg>
-                        <span>ดูเอกสารแนบ (PDF)</span>
-                    </button>
-                </div>
-            </div>
-        </div>
-
-        <div id="error-msg" class="hidden bg-red-50 border-l-4 border-red-500 text-red-700 p-4 rounded-lg mt-4 text-center shadow-sm">
-            <p class="font-bold">❌ ไม่พบข้อมูล</p>
-            <p class="text-sm mt-1">กรุณาตรวจสอบเลขบัตรอีกครั้ง</p>
+            
+            <p id="inter-status" class="mt-8 text-gray-500 font-medium">กรุณารอสักครู่...</p>
         </div>
     </div>
 
-    <footer class="mt-10 pb-6 text-center text-gray-400 text-sm">
-        <p>© 2026 ระบบค้นหาข้อมูลการเลือกตั้ง</p>
-    </footer>
-
-    <div id="pdf-modal" class="hidden fixed inset-0 z-50 bg-black/90 flex flex-col fade-in backdrop-blur-sm">
-        <div class="flex justify-between items-center p-4 bg-gray-900 text-white">
-            <span class="font-semibold text-lg">📄 เอกสารแนบ</span>
-            <button onclick="closePdf()" class="bg-gray-700 hover:bg-gray-600 px-4 py-2 rounded-lg text-sm transition-colors">ปิดหน้าต่าง ✕</button>
+    <div id="pdf-modal" class="hidden fixed inset-0 z-[70] bg-black flex flex-col">
+        <div class="flex justify-between items-center p-4 bg-gray-900 text-white shadow-xl">
+            <span class="font-bold flex items-center gap-2">📄 <span id="pdf-header-title">เอกสารแนบ</span></span>
+            <button onclick="closePdf()" class="bg-white/10 hover:bg-white/20 px-6 py-2 rounded-xl text-sm font-bold transition-all">ปิด ✕</button>
         </div>
-        
-        <div class="flex-grow w-full h-full relative bg-gray-200">
-            <div class="absolute inset-0 flex items-center justify-center -z-10 text-gray-500">
-                <div class="animate-spin rounded-full h-10 w-10 border-b-2 border-gray-600"></div>
-            </div>
-            <iframe id="pdf-frame" class="w-full h-full border-0" src=""></iframe>
-        </div>
+        <iframe id="pdf-frame" class="w-full h-full border-0 bg-white" src=""></iframe>
     </div>
 
     <script>
-        // ==========================================
-        // 1. ตั้งค่า SUPABASE (แก้ตรงนี้!)
-        // ==========================================
+        // กำหนดค่า Supabase ของคุณ
         const SUPABASE_URL = 'https://cefywmpxocgxfxrdpoyb.supabase.co'; 
         const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNlZnl3bXB4b2NneGZ4cmRwb3liIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjgxOTA1NzksImV4cCI6MjA4Mzc2NjU3OX0.wvqy4Xts6wKQyf8tKeVW6rYWJzZzJ-pYQARHKAd-hgg';
         const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-        // ==========================================
-        // 2. จัดการ Input (ตัวเลข + ขีด)
-        // ==========================================
-        const idInputEl = document.getElementById('id-card');
-        
-        idInputEl.addEventListener('input', function (e) {
-            let value = e.target.value.replace(/\D/g, ''); // รับแต่เลข
-            if (value.length > 13) value = value.substring(0, 13);
-            
-            // ใส่ขีดตาม Format บัตรประชาชน
-            let formatted = '';
-            if (value.length > 0) formatted += value.substring(0, 1);
-            if (value.length > 1) formatted += '-' + value.substring(1, 5);
-            if (value.length > 5) formatted += '-' + value.substring(5, 10);
-            if (value.length > 10) formatted += '-' + value.substring(10, 12);
-            if (value.length > 12) formatted += '-' + value.substring(12, 13);
-            
-            e.target.value = formatted;
+        let currentVoter = null;
+
+        // ฟอร์แมตเลขบัตรขณะพิมพ์
+        document.getElementById('id-card').addEventListener('input', (e) => {
+            let v = e.target.value.replace(/\D/g, '').substring(0, 13);
+            let f = v.length > 0 ? v[0] : '';
+            if (v.length > 1) f += '-' + v.substring(1, 5);
+            if (v.length > 5) f += '-' + v.substring(5, 10);
+            if (v.length > 10) f += '-' + v.substring(10, 12);
+            if (v.length > 12) f += '-' + v.substring(12, 13);
+            e.target.value = f;
         });
 
-        // ==========================================
-        // 3. ฟังก์ชันค้นหา
-        // ==========================================
+        // ฟังก์ชันค้นหาข้อมูล
         async function searchVoter() {
-            const rawInput = idInputEl.value;
-            const cleanId = rawInput.replace(/-/g, ''); // ตัดขีดออก
-            
-            const btnText = document.getElementById('btn-text');
-            const btnLoader = document.getElementById('btn-loader');
-            const resultCard = document.getElementById('result-card');
-            const errorMsg = document.getElementById('error-msg');
-            const searchBtn = document.getElementById('search-btn');
+            const cleanId = document.getElementById('id-card').value.replace(/-/g, '');
+            if (cleanId.length !== 13) return alert('กรุณากรอกเลขบัตรให้ครบ 13 หลัก');
 
-            // Reset UI
-            resultCard.classList.add('hidden');
-            errorMsg.classList.add('hidden');
-
-            if (cleanId.length !== 13) {
-                alert('กรุณากรอกเลขบัตรให้ครบ 13 หลัก');
-                return;
-            }
-
-            // Loading state
-            btnText.innerText = 'กำลังค้นหา...';
-            btnLoader.classList.remove('hidden');
-            searchBtn.disabled = true;
-            searchBtn.classList.add('opacity-75');
+            document.getElementById('btn-loader').classList.remove('hidden');
+            document.getElementById('result-card').classList.add('hidden');
 
             try {
-                // เรียกใช้ Function ใน Database (เพื่อความปลอดภัย)
-                const { data, error } = await _supabase
-                    .rpc('get_voter_info', { lookup_id: cleanId });
-
-                if (error) throw error;
-
+                const { data, error } = await _supabase.rpc('get_voter_info', { lookup_id: cleanId });
                 if (data && data.length > 0) {
-                    const voter = data[0];
-                    
-                    // Map ข้อมูลลงหน้าเว็บ
-                    document.getElementById('res-name').innerText = voter.name;
-                    document.getElementById('res-unit').innerText = voter.unit_id;
-                    document.getElementById('res-seq').innerText = voter.number_on_unit || '-';
-                    document.getElementById('res-location').innerText = `บ้านเลขที่ ${voter.home_id || '-'} ${voter.note ? '('+voter.note+')' : ''}`;
-                    
-                    // จัดการปุ่ม PDF Popup
-                    const linkBtn = document.getElementById('res-link');
-                    if(voter.link) {
-                        linkBtn.classList.remove('hidden');
-                        linkBtn.onclick = function() {
-                            openPdf(voter.link); // เรียกฟังก์ชันเปิด Modal
-                        };
-                    } else {
-                        linkBtn.classList.add('hidden');
-                    }
-                    
-                    resultCard.classList.remove('hidden');
-                    resultCard.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                    currentVoter = data[0];
+                    renderResult();
                 } else {
-                    errorMsg.classList.remove('hidden');
+                    alert('ไม่พบข้อมูลผู้มีสิทธิ');
                 }
-            } catch (err) {
-                console.error("Error:", err);
-                alert('เกิดข้อผิดพลาดในการเชื่อมต่อ');
-            } finally {
-                btnText.innerText = 'ตรวจสอบข้อมูล';
-                btnLoader.classList.add('hidden');
-                searchBtn.disabled = false;
-                searchBtn.classList.remove('opacity-75');
-            }
+            } catch (e) { console.error(e); }
+            document.getElementById('btn-loader').classList.add('hidden');
         }
 
-        // ==========================================
-        // 4. ฟังก์ชันจัดการ PDF Modal
-        // ==========================================
-        function openPdf(url) {
-            if (!url) return;
-            // แปลงลิงก์ Google Drive จาก /view เป็น /preview เพื่อให้ Embed ได้
-            const embedUrl = url.replace(/\/view.*/, '/preview');
+        function renderResult() {
+            document.getElementById('res-name').innerText = currentVoter.name;
+            document.getElementById('res-batch').innerText = currentVoter.batch || '-';
+            document.getElementById('res-seq').innerText = currentVoter.sequence || '-';
+            document.getElementById('res-const').innerText = currentVoter.constituency || '-';
+            document.getElementById('res-prov').innerText = currentVoter.province || '-';
+
+            const codes = (currentVoter.constituency_code || '----').split('');
+            const container = document.getElementById('res-code-container');
+            container.innerHTML = codes.map(c => `<div class="digit-box">${c}</div>`).join('');
+
+            document.getElementById('result-card').classList.remove('hidden');
+            document.getElementById('result-card').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        // ฟังก์ชันหลักสำหรับ PDF
+        function handlePdfFlow(type) {
+            const config = {
+                candidate: { url: currentVoter.candidate_link, img: 'https://cdn-icons-png.flaticon.com/512/927/927295.png', title: 'รายชื่อผู้สมัคร สส.เขต' },
+                party: { url: currentVoter.party_link, img: 'https://cdn-icons-png.flaticon.com/512/2633/2633807.png', title: 'รายชื่อพรรคการเมือง' },
+                member: { url: currentVoter.party_member_link, img: 'https://cdn-icons-png.flaticon.com/512/3048/3048122.png', title: 'บัญชีรายชื่อ สส.' },
+                pm: { url: currentVoter.pm_candidate_link, img: 'https://cdn-icons-png.flaticon.com/512/4140/4140047.png', title: 'แคนดิเดตนายกรัฐมนตรี' }
+            };
+
+            const item = config[type];
+            if (!item.url) return alert('ไม่พบลิงก์เอกสาร');
+
+            // 1. สั่ง Iframe โหลดไฟล์ทันที
+            document.getElementById('pdf-frame').src = item.url.replace(/\/view.*/, '/preview');
+            document.getElementById('pdf-header-title').innerText = item.title;
+
+            // 2. แสดง UI นับถอยหลัง
+            document.getElementById('inter-img').src = item.img;
+            document.getElementById('inter-title').innerText = item.title;
+            document.getElementById('inter-status').innerText = "กำลังดาวน์โหลดไฟล์...";
+            document.getElementById('timer-container').classList.remove('hidden');
+            document.getElementById('inter-close-btn').classList.add('hidden');
+            document.getElementById('inter-popup').classList.remove('hidden');
             
-            const modal = document.getElementById('pdf-modal');
-            const frame = document.getElementById('pdf-frame');
+            const progressBar = document.getElementById('timer-bar');
+            progressBar.style.strokeDashoffset = "314"; 
+            setTimeout(() => { progressBar.style.strokeDashoffset = "0"; }, 50);
+
+            let timeLeft = 3;
+            document.getElementById('timer-text').innerText = timeLeft;
             
-            frame.src = embedUrl;
-            modal.classList.remove('hidden');
+            const countdown = setInterval(() => {
+                timeLeft--;
+                if (timeLeft > 0) {
+                    document.getElementById('timer-text').innerText = timeLeft;
+                } else {
+                    clearInterval(countdown);
+                    // 3. ครบเวลา: ซ่อนวงกลม แสดงเครื่องหมายถูก ✓
+                    document.getElementById('timer-container').classList.add('hidden'); 
+                    document.getElementById('inter-close-btn').classList.remove('hidden');
+                    document.getElementById('inter-close-btn').classList.add('animate-pop');
+                    document.getElementById('inter-status').innerText = "ไฟล์พร้อมแล้ว คลิกเพื่อเปิดดู";
+                }
+            }, 1000);
+        }
+
+        function showLoadedPdf() {
+            document.getElementById('pdf-modal').classList.remove('hidden');
+            document.getElementById('inter-popup').classList.add('hidden');
         }
 
         function closePdf() {
-            const modal = document.getElementById('pdf-modal');
-            const frame = document.getElementById('pdf-frame');
-            
-            modal.classList.add('hidden');
-            frame.src = ''; // เคลียร์ src เพื่อหยุดโหลด
+            document.getElementById('pdf-modal').classList.add('hidden');
+            document.getElementById('pdf-frame').src = '';
         }
-
-        // ==========================================
-        // 5. Utilities
-        // ==========================================
-        function resetSearch() {
-            idInputEl.value = '';
-            document.getElementById('result-card').classList.add('hidden');
-        }
-
-        idInputEl.addEventListener("keypress", function(event) {
-            if (event.key === "Enter") {
-                event.preventDefault();
-                searchVoter();
-            }
-        });
     </script>
 </body>
 </html>
