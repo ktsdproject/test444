@@ -3,18 +3,28 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ระบบตรวจสอบสิทธิเลือกตั้ง</title>
+    <title>ระบบตรวจสอบสิทธิเลือกตั้ง 2569</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;600;700&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    
     <style>
         body { font-family: 'Sarabun', sans-serif; }
         .bg-gradient { background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%); }
-        .digit-box { @apply w-12 h-14 border-2 border-blue-600 rounded-lg flex items-center justify-center text-3xl font-black text-blue-800 bg-white shadow-sm; }
-    const SUPABASE_URL = 'https://cefywmpxocgxfxrdpoyb.supabase.co';
-    const SUPABASE_ANON_KEY = 'sb_publishable_unkv8_6kbQS6sZ1H1OGdEw_1dKcRgVn';
-    const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-        /* สไตล์วงกลมจับเวลา */
+        .digit-box { 
+            width: 3rem; 
+            height: 3.5rem; 
+            border-width: 2px; 
+            --tw-border-opacity: 1; border-color: rgb(37 99 235 / var(--tw-border-opacity));
+            border-radius: 0.5rem;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1.875rem; line-height: 2.25rem; font-weight: 900;
+            --tw-text-opacity: 1; color: rgb(30 58 138 / var(--tw-text-opacity));
+            --tw-bg-opacity: 1; background-color: rgb(255 255 255 / var(--tw-bg-opacity));
+            --tw-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05); box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
+        }
+
+        /* ระบบ Timer */
         .timer-svg { transform: rotate(-90deg); }
         .timer-bg { fill: none; stroke: #f3f4f6; stroke-width: 6; }
         .timer-progress { 
@@ -27,7 +37,6 @@
             transition: stroke-dashoffset 3s linear; 
         }
 
-        /* Animation ปุ่มเครื่องหมายถูกเด้งขึ้นมา */
         @keyframes pop-in {
             0% { transform: scale(0); opacity: 0; }
             80% { transform: scale(1.2); opacity: 1; }
@@ -42,15 +51,16 @@
 <body class="bg-gray-100 min-h-screen">
 
     <div class="bg-gradient text-white pb-24 pt-10 px-4 text-center shadow-lg">
-        <h1 class="text-3xl font-bold mb-2">ตรวจสอบสิทธิเลือกตั้ง</h1>
+        <h1 class="text-3xl font-bold mb-2 text-white">ตรวจสอบสิทธิเลือกตั้ง</h1>
         <p class="text-blue-100 opacity-90">กรอกเลขบัตรเพื่อตรวจสอบหน่วยและเอกสาร</p>
     </div>
 
     <div class="max-w-md mx-auto -mt-16 px-4 pb-12">
         <div class="bg-white rounded-2xl shadow-xl p-6 mb-6">
-            <label class="block text-gray-700 font-semibold mb-3 text-center">เลขบัตรประจำตัวประชาชน</label>
+            <label class="block text-gray-700 font-semibold mb-3 text-center text-white">เลขบัตรประจำตัวประชาชน</label>
             <input type="tel" id="id-card" maxlength="17" placeholder="x-xxxx-xxxxx-xx-x" 
                    class="w-full text-2xl tracking-widest text-center border-2 border-gray-200 rounded-xl py-4 focus:border-blue-500 focus:outline-none transition-all">
+            
             <button onclick="searchVoter()" id="search-btn" class="w-full mt-4 bg-blue-600 hover:bg-blue-700 text-white font-bold py-4 rounded-xl shadow-lg flex justify-center items-center text-lg active:scale-95 transition-all">
                 <span id="btn-text">ตรวจสอบข้อมูล</span>
                 <div id="btn-loader" class="hidden loader w-5 h-5 border-2 border-white border-t-transparent rounded-full ml-2"></div>
@@ -85,14 +95,14 @@
 
                 <div>
                     <p class="text-xs text-center text-gray-400 font-bold uppercase mb-3 tracking-widest">รหัสเขตเลือกตั้ง (4 ตัว)</p>
-                    <div id="res-code-container" class="flex justify-center gap-3">
+                    <div id="res-code-container" class="flex justify-center gap-3 text-white">
                         <div class="digit-box">-</div><div class="digit-box">-</div><div class="digit-box">-</div><div class="digit-box">-</div>
                     </div>
                 </div>
 
                 <hr class="border-dashed border-gray-300">
 
-                <div class="space-y-4">
+                <div class="space-y-4 text-white">
                     <button onclick="handlePdfFlow('candidate')" class="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-5 rounded-2xl shadow-lg transition-all flex justify-center items-center gap-2">
                         <span>🟢 รายชื่อผู้สมัคร สส. แบบแบ่งเขต</span>
                     </button>
@@ -146,14 +156,14 @@
     </div>
 
     <script>
-        // กำหนดค่า Supabase ของคุณ
+        // Supabase Configuration
         const SUPABASE_URL = 'https://cefywmpxocgxfxrdpoyb.supabase.co'; 
-        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNlZnl3bXB4b2NneGZ4cmRwb3liIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjgxOTA1NzksImV4cCI6MjA4Mzc2NjU3OX0.wvqy4Xts6wKQyf8tKeVW6rYWJzZzJ-pYQARHKAd-hgg';
+        const SUPABASE_ANON_KEY = 'sb_publishable_unkv8_6kbQS6sZ1H1OGdEw_1dKcRgVn';
         const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
         let currentVoter = null;
 
-        // ฟอร์แมตเลขบัตรขณะพิมพ์
+        // Auto-format ID Card Input (x-xxxx-xxxxx-xx-x)
         document.getElementById('id-card').addEventListener('input', (e) => {
             let v = e.target.value.replace(/\D/g, '').substring(0, 13);
             let f = v.length > 0 ? v[0] : '';
@@ -164,24 +174,40 @@
             e.target.value = f;
         });
 
-        // ฟังก์ชันค้นหาข้อมูล
+        // Search Function
         async function searchVoter() {
-            const cleanId = document.getElementById('id-card').value.replace(/-/g, '');
-            if (cleanId.length !== 13) return alert('กรุณากรอกเลขบัตรให้ครบ 13 หลัก');
+            const inputVal = document.getElementById('id-card').value;
+            const cleanId = inputVal.replace(/-/g, '');
+            
+            if (cleanId.length !== 13) {
+                alert('กรุณากรอกเลขบัตรให้ครบ 13 หลัก');
+                return;
+            }
 
+            // UI Loading State
             document.getElementById('btn-loader').classList.remove('hidden');
+            document.getElementById('btn-text').innerText = 'กำลังตรวจสอบ...';
             document.getElementById('result-card').classList.add('hidden');
 
             try {
-                const { data, error } = await _supabase.rpc('get_voter_info', { lookup_id: cleanId });
+                // เรียก RPC Function จาก Supabase
+                const { data, error } = await _supabase.rpc('get_voter_info', { lookup_id_card: cleanId });
+                
+                if (error) throw error;
+
                 if (data && data.length > 0) {
                     currentVoter = data[0];
                     renderResult();
                 } else {
-                    alert('ไม่พบข้อมูลผู้มีสิทธิ');
+                    alert('ไม่พบข้อมูลผู้มีสิทธิเลือกตั้ง หรือเลขบัตรไม่ถูกต้อง');
                 }
-            } catch (e) { console.error(e); }
-            document.getElementById('btn-loader').classList.add('hidden');
+            } catch (e) {
+                console.error(e);
+                alert('เกิดข้อผิดพลาดในการเชื่อมต่อฐานข้อมูล: ' + e.message);
+            } finally {
+                document.getElementById('btn-loader').classList.add('hidden');
+                document.getElementById('btn-text').innerText = 'ตรวจสอบข้อมูล';
+            }
         }
 
         function renderResult() {
@@ -191,7 +217,9 @@
             document.getElementById('res-const').innerText = currentVoter.constituency || '-';
             document.getElementById('res-prov').innerText = currentVoter.province || '-';
 
-            const codes = (currentVoter.constituency_code || '----').split('');
+            // Render Constituency Code Boxes
+            const codeStr = currentVoter.constituency_code || '----';
+            const codes = codeStr.split('');
             const container = document.getElementById('res-code-container');
             container.innerHTML = codes.map(c => `<div class="digit-box">${c}</div>`).join('');
 
@@ -199,7 +227,7 @@
             document.getElementById('result-card').scrollIntoView({ behavior: 'smooth' });
         }
 
-        // ฟังก์ชันหลักสำหรับ PDF
+        // PDF Handling with 3s Timer
         function handlePdfFlow(type) {
             const config = {
                 candidate: { url: currentVoter.candidate_link, img: 'https://cdn-icons-png.flaticon.com/512/927/927295.png', title: 'รายชื่อผู้สมัคร สส.เขต' },
@@ -209,16 +237,16 @@
             };
 
             const item = config[type];
-            if (!item.url) return alert('ไม่พบลิงก์เอกสาร');
+            if (!item || !item.url) return alert('ไม่พบลิงก์เอกสารสำหรับเขตของคุณ');
 
-            // 1. สั่ง Iframe โหลดไฟล์ทันที
-            document.getElementById('pdf-frame').src = item.url.replace(/\/view.*/, '/preview');
+            // เตรียม Iframe ล่วงหน้า
+            document.getElementById('pdf-frame').src = item.url;
             document.getElementById('pdf-header-title').innerText = item.title;
 
-            // 2. แสดง UI นับถอยหลัง
+            // แสดง Popup นับถอยหลัง
             document.getElementById('inter-img').src = item.img;
             document.getElementById('inter-title').innerText = item.title;
-            document.getElementById('inter-status').innerHTML = "ข้อมูลนี้นำมาจากประกาศของกกต.และจะตรงกับประกาศหน้าหน่วย<br>หากไม่ถูกต้อง กรุณาแจ้งเจ้าหน้าที่ ณ ศูนย์อำนวยการ";
+            document.getElementById('inter-status').innerHTML = "ข้อมูลนี้นำมาจากประกาศของ กกต.<br>กรุณาตรวจสอบความถูกต้องอีกครั้ง";
             document.getElementById('timer-container').classList.remove('hidden');
             document.getElementById('inter-close-btn').classList.add('hidden');
             document.getElementById('inter-popup').classList.remove('hidden');
@@ -236,11 +264,10 @@
                     document.getElementById('timer-text').innerText = timeLeft;
                 } else {
                     clearInterval(countdown);
-                    // 3. ครบเวลา: ซ่อนวงกลม แสดงเครื่องหมายถูก ✓
                     document.getElementById('timer-container').classList.add('hidden'); 
                     document.getElementById('inter-close-btn').classList.remove('hidden');
                     document.getElementById('inter-close-btn').classList.add('animate-pop');
-                    document.getElementById('inter-status').innerHTML = "กรุณาเลื่อนดูให้ครบทั้งเอกสาร<br>กด✓เพื่อเปิดไฟล์";
+                    document.getElementById('inter-status').innerHTML = "เอกสารพร้อมแล้ว<br>กด ✓ เพื่อเปิดอ่าน";
                 }
             }, 1000);
         }
@@ -256,9 +283,4 @@
         }
     </script>
 </body>
-
 </html>
-
-
-
-
