@@ -216,7 +216,7 @@
             // 2. แสดง UI นับถอยหลัง
             document.getElementById('inter-img').src = item.img;
             document.getElementById('inter-title').innerText = item.title;
-            document.getElementById('inter-status').innerText = "เลื่อนดูให้ครบทั้งเอกสาร<br>ข้อมูลจะต้องตรงกับประกาศหน้าหน่วย...";
+            document.getElementById('inter-status').innerText = "ข้อมูลจะตรงกับประกาศหน้าหน่วย หากไม่ถูกต้อง กรุณาแจ้งเจ้าหน้าที่";
             document.getElementById('timer-container').classList.remove('hidden');
             document.getElementById('inter-close-btn').classList.add('hidden');
             document.getElementById('inter-popup').classList.remove('hidden');
@@ -238,7 +238,7 @@
                     document.getElementById('timer-container').classList.add('hidden'); 
                     document.getElementById('inter-close-btn').classList.remove('hidden');
                     document.getElementById('inter-close-btn').classList.add('animate-pop');
-                    document.getElementById('inter-status').innerText = "กดเพื่อเปิดดูเอกสาร";
+                    document.getElementById('inter-status').innerText = "กดเพื่อเปิดไฟล์และเลื่อนดูให้ครบทั้งเอกสาร";
                 }
             }, 1000);
         }
@@ -256,4 +256,5 @@
 </body>
 
 </html>
+
 
