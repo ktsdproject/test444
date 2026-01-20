@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ระบบตรวจสอบสิทธิเลือกตั้ง</title>
+    <title>ระบบตรวจสอบสิทธิเลือกตั้งล่วงหน้า</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;600;700&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -83,8 +83,8 @@
 <body class="bg-gray-100 min-h-screen">
 
     <div class="bg-gradient text-white pb-24 pt-10 px-4 text-center shadow-lg">
-        <h1 class="text-3xl font-bold mb-2">ตรวจสอบสิทธิเลือกตั้ง</h1>
-        <p class="text-blue-100 opacity-90">กรอกเลขบัตรเพื่อตรวจสอบหน่วยและเอกสาร</p>
+        <h1 class="text-3xl font-bold mb-2">ตรวจสอบสิทธิเลือกตั้งล่วงหน้า</h1>
+        <p class="text-blue-100 opacity-90">สำหรับวันที่ 1 กุมภาพันธ์ 2569 สำนักงานเขตคลองเตย </p>
     </div>
 
     <div class="max-w-md mx-auto -mt-16 px-4 pb-12">
@@ -128,7 +128,7 @@
                 </div>
 
                 <div>
-                    <p class="text-xs text-center text-gray-400 font-bold uppercase mb-3 tracking-widest">รหัสเขตเลือกตั้ง (4 ตัว)</p>
+                    <p class="text-xs text-center text-gray-400 font-bold uppercase mb-3 tracking-widest">รหัสเขตเลือกตั้ง</p>
                     <div id="res-code-container" class="flex justify-center gap-3">
                         <div class="digit-box">-</div>
                         <div class="digit-box">-</div>
@@ -141,16 +141,16 @@
 
                 <div class="space-y-4">
                     <button onclick="handlePdfFlow('candidate')" class="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-5 rounded-2xl shadow-lg transition-all flex justify-center items-center gap-2">
-                        <span>🟢 รายชื่อผู้สมัคร สส. แบบแบ่งเขต</span>
+                        <span>ผู้สมัคร ส.ส. แบบแบ่งเขตของเขตท่าน<br>บัตรสีเขียว</span>
                     </button>
                     
                     <button onclick="handlePdfFlow('party')" class="w-full bg-pink-500 hover:bg-pink-600 text-white font-bold py-5 rounded-2xl shadow-lg transition-all flex justify-center items-center gap-2">
-                        <span>💗 รายชื่อพรรคการเมือง</span>
+                        <span>รายชื่อพรรคการเมือง<br>บัตรสีชมพู</span>
                     </button>
                     
                     <div class="grid grid-cols-2 gap-4">
                         <button onclick="handlePdfFlow('member')" class="bg-white border-2 border-gray-200 text-gray-700 hover:bg-gray-50 font-bold py-4 rounded-2xl shadow-sm text-sm flex flex-col items-center justify-center gap-1">
-                            <span class="text-lg">⚪</span><span>บัญชีรายชื่อ สส.</span>
+                            <span class="text-lg">⚪</span><span>ส.ส.แบบบัญชีรายชื่อ</span>
                         </button>
                         <button onclick="handlePdfFlow('pm')" class="bg-white border-2 border-gray-200 text-gray-700 hover:bg-gray-50 font-bold py-4 rounded-2xl shadow-sm text-sm flex flex-col items-center justify-center gap-1">
                             <span class="text-lg">👔</span><span>แคนดิเดตนายกฯ</span>
@@ -284,22 +284,22 @@
                 candidate: { 
                     url: currentVoter.candidate_link, 
                     img: 'https://cdn-icons-png.flaticon.com/512/1022/1022204.png', 
-                    title: 'รายชื่อผู้สมัคร สส.เขต' 
+                    title: 'รายชื่อผู้สมัคร ส.ส.แบบแบ่งเขต บัตรสีเขียว' 
                 },
                 party: { 
                     url: currentVoter.party_link, 
                     img: 'https://cdn-icons-png.flaticon.com/512/2633/2633807.png', 
-                    title: 'รายชื่อพรรคการเมือง' 
+                    title: 'รายชื่อพรรคการเมือง บัตรสีชมพู' 
                 },
                 member: { 
                     url: currentVoter.party_member_link, 
                     img: 'https://cdn-icons-png.flaticon.com/512/3048/3048122.png', 
-                    title: 'บัญชีรายชื่อ สส.' 
+                    title: 'รายชื่อผู้สมัคร ส.ส.แบบบัญชีรายชื่อ เอกสารประกอบ' 
                 },
                 pm: { 
                     url: currentVoter.pm_candidate_link, 
                     img: 'https://cdn-icons-png.flaticon.com/512/1014/1014569.png', 
-                    title: 'แคนดิเดตนายกรัฐมนตรี' 
+                    title: 'แคนดิเดตนายกรัฐมนตรี เอกสารประกอบ' 
                 }
             };
 
@@ -320,7 +320,7 @@
             document.getElementById('pdf-header-title').innerText = item.title;
             document.getElementById('inter-img').src = item.img;
             document.getElementById('inter-title').innerText = item.title;
-            document.getElementById('inter-status').innerHTML = "ข้อมูลนี้นำมาจากประกาศของ กกต.<br>กรุณาตรวจสอบความถูกต้องอีกครั้ง";
+            document.getElementById('inter-status').innerHTML = "ข้อมูลนี้นำมาจากประกาศของ กกต.<br>กรุณาตรวจสอบความถูกต้องที่ประกาศหน้าหน่วยอีกครั้ง";
             
             document.getElementById('timer-container').classList.remove('hidden');
             document.getElementById('inter-close-btn').classList.add('hidden');
@@ -346,7 +346,7 @@
                     document.getElementById('timer-container').classList.add('hidden'); 
                     document.getElementById('inter-close-btn').classList.remove('hidden');
                     document.getElementById('inter-close-btn').classList.add('animate-pop');
-                    document.getElementById('inter-status').innerHTML = "เอกสารพร้อมแล้ว<br>กด ✓ เพื่อเปิดไฟล์";
+                    document.getElementById('inter-status').innerHTML = "กรุณาเลื่อนดูให้ครบทุกหน้า<br>กด ✓ เพื่อเปิดไฟล์";
                 }
             }, 1000);
         }
