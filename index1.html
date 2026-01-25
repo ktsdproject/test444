@@ -56,12 +56,18 @@
                     </div>
                 </div>
 
-                <div class="bg-gray-50 p-5 rounded-2xl border border-gray-200 text-center leading-relaxed">
-                    <p class="text-xs text-gray-400 font-bold uppercase mb-2">ข้อมูลพื้นที่เลือกตั้ง</p>
-                    <p class="text-lg text-gray-700">
-                        เขตเลือกตั้งที่ <span id="res-const" class="font-black text-gray-900 text-xl">--</span><br>
-                        จังหวัด <span id="res-prov" class="font-black text-gray-900 text-xl">----------</span>
-                    </p>
+                <div class="bg-gray-50 p-5 rounded-2xl border border-gray-200">
+                    <p class="text-xs text-center text-gray-400 font-bold uppercase mb-3">ข้อมูลพื้นที่เลือกตั้ง</p>
+                    <div class="space-y-2">
+                        <div class="flex justify-between items-center border-b border-gray-200 pb-2">
+                            <span class="text-gray-600 font-medium">เขตเลือกตั้งที่</span>
+                            <span id="res-const" class="text-xl font-black text-gray-900">--</span>
+                        </div>
+                        <div class="flex justify-between items-center pt-1">
+                            <span class="text-gray-600 font-medium">จังหวัด</span>
+                            <span id="res-prov" class="text-xl font-black text-gray-900">----------</span>
+                        </div>
+                    </div>
                 </div>
 
                 <div>
@@ -72,20 +78,22 @@
                 <hr class="border-dashed border-gray-300">
 
                 <div class="space-y-4">
-                    <button onclick="handlePdfFlow('candidate')" class="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-5 rounded-2xl shadow-lg transition-all flex flex-col items-center justify-center leading-tight">
-                        <span>ผู้สมัคร ส.ส. แบบแบ่งเขต</span>
-                        <span class="text-xs opacity-80 font-normal">บัตรสีเขียว</span>
+                    <button onclick="handlePdfFlow('candidate')" class="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-5 rounded-2xl shadow-lg transition-all flex flex-col items-center justify-center leading-tight active:scale-95">
+                        <span class="text-lg">ผู้สมัคร ส.ส. แบบแบ่งเขต</span>
+                        <span class="text-sm opacity-90 font-normal mt-1">บัตรสีเขียว</span>
                     </button>
-                    <button onclick="handlePdfFlow('party')" class="w-full bg-pink-500 hover:bg-pink-600 text-white font-bold py-5 rounded-2xl shadow-lg transition-all flex flex-col items-center justify-center leading-tight">
-                        <span>รายชื่อพรรคการเมือง</span>
-                        <span class="text-xs opacity-80 font-normal">บัตรสีชมพู</span>
+                    
+                    <button onclick="handlePdfFlow('party')" class="w-full bg-pink-500 hover:bg-pink-600 text-white font-bold py-5 rounded-2xl shadow-lg transition-all flex flex-col items-center justify-center leading-tight active:scale-95">
+                        <span class="text-lg">รายชื่อพรรคการเมือง</span>
+                        <span class="text-sm opacity-90 font-normal mt-1">บัตรสีชมพู</span>
                     </button>
+                    
                     <div class="grid grid-cols-2 gap-4">
-                        <button onclick="handlePdfFlow('member')" class="bg-white border-2 border-gray-200 text-gray-700 hover:bg-gray-50 font-bold py-4 rounded-2xl shadow-sm text-sm flex flex-col items-center justify-center gap-1 transition-all">
-                            <span class="text-lg">⚪</span><span>ส.ส.แบบบัญชีรายชื่อ</span>
+                        <button onclick="handlePdfFlow('member')" class="bg-white border-2 border-gray-200 text-gray-700 hover:bg-gray-50 font-bold py-4 rounded-2xl shadow-sm text-sm flex flex-col items-center justify-center gap-2 transition-all active:scale-95">
+                            <span class="text-2xl">⚪</span><span>ส.ส.แบบบัญชีรายชื่อ</span>
                         </button>
-                        <button onclick="handlePdfFlow('pm')" class="bg-white border-2 border-gray-200 text-gray-700 hover:bg-gray-50 font-bold py-4 rounded-2xl shadow-sm text-sm flex flex-col items-center justify-center gap-1 transition-all">
-                            <span class="text-lg">👔</span><span>แคนดิเดตนายกฯ</span>
+                        <button onclick="handlePdfFlow('pm')" class="bg-white border-2 border-gray-200 text-gray-700 hover:bg-gray-50 font-bold py-4 rounded-2xl shadow-sm text-sm flex flex-col items-center justify-center gap-2 transition-all active:scale-95">
+                            <span class="text-2xl">👔</span><span>แคนดิเดตนายกฯ</span>
                         </button>
                     </div>
                 </div>
@@ -103,12 +111,12 @@
                     <svg class="timer-svg w-full h-full"><circle class="timer-bg" cx="64" cy="64" r="50"></circle><circle id="timer-bar" class="timer-progress" cx="64" cy="64" r="50"></circle></svg>
                     <div id="timer-text" class="absolute inset-0 flex items-center justify-center text-4xl font-black text-gray-800">3</div>
                 </div>
-                <button id="inter-close-btn" onclick="showLoadedPdf()" class="hidden w-24 h-24 bg-emerald-500 text-white rounded-full shadow-2xl flex items-center justify-center text-5xl font-bold transition-all z-10">✓</button>
+                <button id="inter-close-btn" onclick="showLoadedPdf()" class="hidden w-24 h-24 bg-emerald-500 text-white rounded-full shadow-2xl flex items-center justify-center text-5xl font-bold transition-all z-10 hover:bg-emerald-600">✓</button>
             </div>
 
-            <p id="inter-status" class="mt-8 text-gray-500 font-medium leading-relaxed">
+            <p id="inter-status" class="mt-8 text-sm text-gray-500 font-medium leading-relaxed bg-gray-50 p-4 rounded-xl border border-gray-100">
                 ข้อมูลนี้นำมาจากประกาศ กกต.ของแต่ละจังหวัด<br>
-                กรุณาตรวจสอบความถูกต้องที่ประกาศหน้าหน่วยเลือกตั้งอีกครั้ง
+                <span class="text-red-500 font-bold">กรุณาตรวจสอบความถูกต้อง<br>ที่ประกาศหน้าหน่วยเลือกตั้งอีกครั้ง</span>
             </p>
         </div>
     </div>
@@ -116,12 +124,13 @@
     <div id="pdf-modal" class="hidden fixed inset-0 z-[70] bg-black flex flex-col">
         <div class="flex justify-between items-center p-4 bg-gray-900 text-white shadow-xl">
             <span class="font-bold flex items-center gap-2">📄 <span id="pdf-header-title">เอกสาร</span></span>
-            <button onclick="closePdf()" class="bg-white/10 px-6 py-2 rounded-xl text-sm font-bold">ปิด ✕</button>
+            <button onclick="closePdf()" class="bg-white/10 hover:bg-white/20 px-6 py-2 rounded-xl text-sm font-bold transition-all">ปิด ✕</button>
         </div>
         <iframe id="pdf-frame" class="w-full h-full border-0 bg-white" src=""></iframe>
     </div>
 
     <script>
+        // *** แก้ URL Web App ของคุณที่นี่ ***
         const GAS_WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbz8byrKG31kOoTpYRcmKGrUnheNf9gWnozMVdcVT2MFF7W-l7KBXaeOHj_mxq89DJVM/exec';
 
         let currentVoter = null;
